@@ -1,0 +1,56 @@
+doctype html
+html
+  head
+  body
+    h1 Report new rune
+    form
+      label(for='name') Player:
+      input#name(type='text' name='name')
+      br
+      br
+      label(for='password') Password:
+      input#password(type='password' name='password')
+      br
+      br
+      label(for='rune') Rune:
+      select#rune(name='rune')
+        each rune in runes
+            option(value=rune.rune_name) #{rune.rune_name}
+      br
+      br
+      input(type='submit' value='Submit')
+      br
+      br
+      p#result 
+    script.
+      const form = document.querySelector('form');
+      form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      const name = data.get('name');
+      const password = data.get('password');
+      const rune = data.get('rune');
+      const body = {
+      player_name: name,
+      player_password: password,
+      rune_name: rune
+      }
+      console.log(JSON.stringify(body));
+      var url = "/findings";
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+          const result = document.querySelector('#result');
+        var status = xhr.status;
+        if (status === 0 || (status >= 200 && status < 400)) {
+            result.innerText = 'Good finding!';
+        console.log(xhr.responseText);
+        } else {
+            result.innerText = 'Could not add finding. Wrong username/password?';
+        }
+      }};
+      xhr.send(JSON.stringify(body));
+      });
