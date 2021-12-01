@@ -10,6 +10,9 @@ app.get('/', (req, res) => {
     res.render('add_finding', {runes: runes});
 });
 
+app.use(express.static('css'));
+app.use(express.static('images'));
+app.use(express.static('fonts'));
 app.use(express.json());
 app.set('view engine', 'pug');
 app.use('/runes', runesRouter);
