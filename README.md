@@ -3,7 +3,7 @@
 ## Database
     sudo apt install sqlite3
     sqlite3 runes.db
-    .load setup.sql
+    .read setup.sql
 
 ## Node
     sudo apt install nodejs npm
