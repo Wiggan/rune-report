@@ -5,3 +5,8 @@ block content
     ul
         each rune in runes
             li= rune.rune_name
+
+    p Holy grail items found: 
+    ul
+        each holy_grail_item in holy_grail_items
+            li= holy_grail_item.item_name

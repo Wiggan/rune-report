@@ -24,3 +24,28 @@ block content
             td
                 input(type='submit' value='Report' form='rune_form')
             td#result
+
+    h1 Report new holy grail item
+    form(id='holy_grail_form' method='POST' action='/holy_grail_findings')
+    table
+        tr
+            td 
+                label(for='player_name') Player:
+            td
+                input#name(type='text' name='player_name' form='holy_grail_form')
+        tr
+            td
+                label(for='player_password') Password:
+            td
+                input#password(type='password' name='player_password' form='holy_grail_form')
+        tr 
+            td 
+                label(for='holy_grail_item_name') Rune:
+            td
+                select#rune(name='holy_grail_item_name' form='holy_grail_form')
+                    each holy_grail_item in holy_grail_items
+                        option(value=holy_grail_item.item_name) #{holy_grail_item.item_name}
+        tr
+            td
+                input(type='submit' value='Report' form='holy_grail_form')
+            td#result

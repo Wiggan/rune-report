@@ -24,7 +24,8 @@ router.post('/', function (req, res, next) {
         const result = db.instance.prepare(`INSERT INTO finding (player_id, rune_id) VALUES (?, ?)`).run(player_id.player_id, rune_id.rune_id);
         if (result.changes) {
             const data = db.instance.prepare(`SELECT rune_name, date(finding_date) FROM finding JOIN player ON finding.player_id = player.player_id JOIN rune ON finding.rune_id = rune.rune_id WHERE finding.player_id = ?`).all([player_id.player_id]);
-            res.render('stats', {player_name: player_name, runes: data});
+            const holy_grail_item_data = db.instance.prepare(`SELECT item_name, date(finding_date) FROM holy_grail_item_finding JOIN player ON holy_grail_item_finding.player_id = player.player_id JOIN holy_grail_item ON holy_grail_item_finding.holy_grail_item_id = holy_grail_item.holy_grail_item_id WHERE holy_grail_item_finding.player_id = ?`).all([player_id.player_id]);
+            res.render('stats', { player_name: player_name, runes: data, holy_grail_items: holy_grail_item_data });
         } else {
             res.json('Error in creating quote');
         }
