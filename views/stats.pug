@@ -1,0 +1,7 @@
+extends template.pug
+block content
+    h1 Stats for #{player_name}
+    p Runes found: 
+    ul
+        each rune in runes
+            li= rune.rune_name

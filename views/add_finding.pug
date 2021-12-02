@@ -1,68 +1,26 @@
-doctype html
-html
-  head
-    link(rel='stylesheet', type='text/css', href='/style.css')
-  body
-    div#left 
-        img(src='/fire.gif') 
-        
-    div#center 
-      h1 Report new rune
-      form(id='rune_form')
-      table
+extends template.pug
+block content
+    h1 Report new rune
+    form(id='rune_form' method='POST' action='/findings')
+    table
         tr
-          td 
-            label(for='name') Player:
-          td
-            input#name(type='text' name='name' form='rune_form')
+            td 
+                label(for='player_name') Player:
+            td
+                input#name(type='text' name='player_name' form='rune_form')
         tr
-          td
-            label(for='password') Password:
-          td
-            input#password(type='password' name='password' form='rune_form')
+            td
+                label(for='player_password') Password:
+            td
+                input#password(type='password' name='player_password' form='rune_form')
         tr 
-          td 
-            label(for='rune') Rune:
-          td
-            select#rune(name='rune' form='rune_form')
-              each rune in runes
-                  option(value=rune.rune_name) #{rune.rune_name}
+            td 
+                label(for='rune_name') Rune:
+            td
+                select#rune(name='rune_name' form='rune_form')
+                    each rune in runes
+                        option(value=rune.rune_name) #{rune.rune_name}
         tr
-          td
-            input(type='submit' value='Report' form='rune_form')
-          td#result
-      script.
-        const form = document.querySelector('form');
-        form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const data = new FormData(event.target);
-        const name = data.get('name');
-        const password = data.get('password');
-        const rune = data.get('rune');
-        const body = {
-        player_name: name,
-        player_password: password,
-        rune_name: rune
-        }
-        console.log(JSON.stringify(body));
-        var url = "/findings";
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url);
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            const result = document.querySelector('#result');
-          var status = xhr.status;
-          if (status === 0 || (status >= 200 && status < 400)) {
-              result.innerText = 'Good finding!';
-          console.log(xhr.responseText);
-          } else {
-              result.innerText = 'Could not add finding. Wrong username/password?';
-          }
-        }};
-        xhr.send(JSON.stringify(body));
-        });
-        
-    div#right 
-        img(src='/fire.gif') 
+            td
+                input(type='submit' value='Report' form='rune_form')
+            td#result
