@@ -26,6 +26,7 @@ h1 {
   float: left;
   width: 25%;
 }
-
-
-  
+#menuitem {
+  padding:10px;
+  color: crimson;
+}

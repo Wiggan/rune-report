@@ -3,6 +3,7 @@ const app = express();
 const port = 3000 || process.env.PORT;
 const db = require('./services/db');
 const runesRouter = require('./routes/runes');
+const statsRouter = require('./routes/stats');
 const findingsRouter = require('./routes/findings');
 const holyGrailFindingsRouter = require('./routes/holy_grail_findings');
 const formidableMiddleware = require('express-formidable');
@@ -23,6 +24,7 @@ app.use(express.static('fonts'));
 app.use(express.json());
 app.set('view engine', 'pug');
 app.use('/runes', runesRouter);
+app.use('/stats', statsRouter);
 app.use('/findings', findingsRouter);
 app.use('/holy_grail_findings', holyGrailFindingsRouter);
 

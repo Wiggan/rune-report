@@ -3,11 +3,15 @@ html
   head
     link(rel='stylesheet' type='text/css' href='/style.css')
     link(rel='icon' type='image/x-icon' href='/fire.gif')
+    script(src='https://cdn.plot.ly/plotly-2.6.3.min.js')
   body
+
     div#left 
       img(src='/fire.gif') 
 
-    div#center 
+    div#center
+        a(href='/')#menuitem REPORT
+        a(href='/stats')#menuitem STATS
         block content
 
     div#right 
