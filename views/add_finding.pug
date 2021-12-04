@@ -46,6 +46,11 @@ block content
                     each holy_grail_item in holy_grail_items
                         option(value=holy_grail_item.item_name) #{holy_grail_item.item_name}
         tr
+            td 
+                label(for='holy_grail_item_location') Location:
+            td
+                input#name(type='text' name='holy_grail_item_location' form='holy_grail_form')
+        tr
             td
                 input(type='submit' value='Report' form='holy_grail_form')
             td#result
