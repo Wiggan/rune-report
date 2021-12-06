@@ -30,3 +30,8 @@ h1 {
   padding:10px;
   color: crimson;
 }
+
+table.holy_grail_table th, tr, p {
+  padding: 2px;
+  margin: 0px;
+}

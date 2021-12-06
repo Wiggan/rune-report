@@ -5,7 +5,7 @@ const db = require('./services/db');
 const runesRouter = require('./routes/runes');
 const statsRouter = require('./routes/stats');
 const findingsRouter = require('./routes/findings');
-const holyGrailFindingsRouter = require('./routes/holy_grail_findings');
+const holyGrailRouter = require('./routes/holy_grail_findings');
 const formidableMiddleware = require('express-formidable');
 
 app.get('/', (req, res) => {
@@ -25,8 +25,9 @@ app.use(express.json());
 app.set('view engine', 'pug');
 app.use('/runes', runesRouter);
 app.use('/stats', statsRouter);
+app.use('/holy_grail_stats', holyGrailRouter);
 app.use('/findings', findingsRouter);
-app.use('/holy_grail_findings', holyGrailFindingsRouter);
+app.use('/holy_grail_findings', holyGrailRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

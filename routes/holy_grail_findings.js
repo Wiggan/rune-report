@@ -2,15 +2,66 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 
+const results_query = `
+SELECT
+holy_grail_item.item_name,
+GROUP_CONCAT(DISTINCT(player_name)) as 'player',
+GROUP_CONCAT(DISTINCT(holy_grail_item_finding.player_id)) as 'player_id',
+GROUP_CONCAT(finding_location,'||') as 'locations',
+GROUP_CONCAT(date(finding_date), '||') as 'dates'
+FROM holy_grail_item
+LEFT OUTER JOIN holy_grail_item_finding ON
+holy_grail_item.holy_grail_item_id = holy_grail_item_finding.holy_grail_item_id
+LEFT OUTER JOIN player ON
+player.player_id = holy_grail_item_finding.player_id
+GROUP BY 
+holy_grail_item.holy_grail_item_id,
+holy_grail_item_finding.player_id
+ORDER BY
+holy_grail_item.holy_grail_item_id,
+finding_date
+ASC
+`
+
+get_holy_grail_data = function () {
+    const players = db.instance.prepare(`SELECT player_name FROM player ORDER BY player_id`)
+        .all([])
+        .map(x => x.player_name);
+
+    let holy_grail_results = {};
+
+    const item_results = db.instance.prepare(results_query).all([]);
+
+    item_results.forEach(function (element) {
+        element.item_name in holy_grail_results || (holy_grail_results[element.item_name] = Array(players.length));
+
+        const location = (element.locations || "").split('||')[0]
+        const date_ = (element.dates || "").split('||')[0]
+
+        holy_grail_results[element.item_name][element.player_id - 1] = {
+            "location": location,
+            "date": date_,
+        }
+    });
+
+    return {
+        "players": players,
+        "holy_grail_results": holy_grail_results
+    }
+}
+
 /* GET findings. */
 router.get('/', function (req, res, next) {
     try {
-
+        res.render('holy_grail_stats',
+            get_holy_grail_data()
+        );
     } catch (err) {
-        console.error(`Error while getting holy grail items `, err.message);
+        console.error(`Error while getting runes `, err.message);
         next(err);
     }
 });
+
 
 /* INSERT finding. */
 router.post('/', function (req, res, next) {
@@ -23,9 +74,7 @@ router.post('/', function (req, res, next) {
 
         const result = db.instance.prepare(`INSERT INTO holy_grail_item_finding (player_id, holy_grail_item_id, finding_date, finding_location) VALUES (?, ?, datetime('now'), ?)`).run(player_id.player_id, holy_grail_item_id.holy_grail_item_id, holy_grail_item_location);
         if (result.changes) {
-            const rune_data = db.instance.prepare(`SELECT rune_name, date(finding_date) FROM finding JOIN player ON finding.player_id = player.player_id JOIN rune ON finding.rune_id = rune.rune_id WHERE finding.player_id = ?`).all([player_id.player_id]);
-            const holy_grail_item_data = db.instance.prepare(`SELECT item_name, date(finding_date) FROM holy_grail_item_finding JOIN player ON holy_grail_item_finding.player_id = player.player_id JOIN holy_grail_item ON holy_grail_item_finding.holy_grail_item_id = holy_grail_item.holy_grail_item_id WHERE holy_grail_item_finding.player_id = ?`).all([player_id.player_id]);
-            res.render('stats', { player_name: player_name, runes: rune_data, holy_grail_items: holy_grail_item_data });
+            res.render('holy_grail_stats', get_holy_grail_data());
         } else {
             res.json('Error in creating holy grail item finding');
         }

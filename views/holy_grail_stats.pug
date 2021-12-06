@@ -1,0 +1,22 @@
+extends template.pug
+block content
+    h1 The holy grail
+
+    table(rules="all", frame="void")#holy_grail_table
+        tr
+            td
+                b Item
+            each player in players
+                td
+                    b #{player}
+        each item_result, item in holy_grail_results
+            tr
+                td
+                    p #{item}
+                each player_result in item_result
+                    td
+                        if player_result  === undefined
+                            
+                            p 
+                        else 
+                            p(title=player_result.location) #{player_result.date}
