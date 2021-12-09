@@ -18,7 +18,7 @@ GROUP BY
 holy_grail_item.holy_grail_item_id,
 holy_grail_item_finding.player_id
 ORDER BY
-holy_grail_item.holy_grail_item_id,
+holy_grail_item.item_name,
 finding_date
 ASC
 `
