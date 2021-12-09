@@ -35,3 +35,7 @@ table.holy_grail_table th, tr, p {
   padding: 2px;
   margin: 0px;
 }
+
+.all_passed p {
+  color: goldenrod;
+}

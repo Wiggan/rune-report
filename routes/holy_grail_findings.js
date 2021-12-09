@@ -41,6 +41,9 @@ get_holy_grail_data = function () {
         holy_grail_results[element.item_name][element.player_id - 1] = {
             "location": location,
             "date": date_,
+            "all_passed": (item_results
+                .map(x => element.item_name == x.item_name)
+                .filter(x => x).length == players.length)
         }
     });
 
