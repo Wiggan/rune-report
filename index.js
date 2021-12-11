@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
 app.use(formidableMiddleware());
 app.use(express.static('css'));
 app.use(express.static('images'));
-app.use(express.static('images/runes'));
 app.use(express.static('fonts'));
 app.use(express.json());
 app.set('view engine', 'pug');
