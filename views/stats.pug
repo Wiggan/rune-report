@@ -18,11 +18,60 @@ block content
     script.
         $( function() {
             $( "#tabs" ).tabs({"classes":{
-                            "ui-tabs": "d2tabs",
-                            "ui-tabs-nav": "d2tabs",
-                            "ui-tabs-tab": "d2tabs",
-                            "ui-tabs-panel": "d2tabs"
-                        }});
+                "ui-tabs": "d2tabs",
+                "ui-tabs-nav": "d2tabs",
+                "ui-tabs-tab": "d2tabs",
+                "ui-tabs-panel": "d2tabs"
+        }});
+        });
+        $( function() {
+        var data = [
+        {
+            domain: { x: [0, 1], y: [0, 1] },
+            value: #{runometer_value},
+            title: { text: "Runometer: <br> HRs last 72 hours" },
+            type: "indicator",
+            mode: "gauge+number",
+            delta: { reference: 1 },
+            gauge: { axis: { range: [null, 10] },
+                steps: [
+                {'range': [0, 0.5], 'color': '#000'},
+                {'range': [0.5, 1], 'color': '#040404'},
+                {'range': [1, 1.5], 'color': '#060606'},
+                {'range': [1.5, 2], 'color': '#080808'},
+                {'range': [2, 2.5], 'color': '#111'},
+                {'range': [2.5, 3], 'color': '#121'},
+                {'range': [3, 3.5], 'color': '#131'},
+                {'range': [3.5, 4], 'color': '#141'},
+                {'range': [4, 4.5], 'color': '#241'},
+                {'range': [4.5, 5], 'color': '#341'},
+                {'range': [5, 5.5], 'color': '#441'},
+                {'range': [5.5, 6], 'color': '#541'},
+                {'range': [6, 6.5], 'color': '#641'},
+                {'range': [6.5, 7], 'color': '#741'},
+                {'range': [7, 7.5], 'color': '#841'},
+                {'range': [7.5, 8], 'color': '#941'},
+                {'range': [8, 8.5], 'color': '#A41'},
+                {'range': [8.5, 9], 'color': '#B41'},
+                {'range': [9, 9.5], 'color': '#C41'},
+                {'range': [9.5, 10], 'color': '#D41'},
+                ],
+
+                'bar': {'color': "green"},
+                
+            
+                }
+        }
+        ];
+
+        var layout = {
+            width: 400,
+            height: 400,
+            paper_bgcolor:'rgba(0,0,0,0)',
+            plot_bgcolor:'rgba(0,0,0,0)'
+        };
+
+        Plotly.newPlot('runometer', data, layout);
         });
     h1 Rune stats
     div#tabs
@@ -48,7 +97,7 @@ block content
                                         p #{rune_finding.player_name}
                                     td
                                         p #{rune_finding.finding_date}
-                    td
+                    td(valign='top')
                         div#runometer
         div#tabs-2
             p Coming soon!

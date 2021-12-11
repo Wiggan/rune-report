@@ -3,8 +3,21 @@ const router = express.Router();
 const db = require('../services/db');
 
 get_stats_data = function () {
-    const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date' FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id ORDER BY date(finding_date) DESC`).all([]);
-    return { all_runes: all_runes };
+    const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date'
+    FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
+    ORDER BY date(finding_date) DESC`).all([]);
+
+    const runometer_value = db.instance.prepare(`
+    SELECT sum(rune_value) as 'runometer_value'
+    FROM finding
+    JOIN rune ON rune.rune_id = finding.rune_id
+    WHERE finding.finding_date >= datetime('now', '-72 Hour');
+    `).all([]).map(x => x.runometer_value);
+
+    return {
+        'all_runes': all_runes,
+        'runometer_value': runometer_value
+    };
 }
 
 router.get('/', function (req, res, next) {
