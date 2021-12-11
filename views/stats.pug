@@ -1,7 +1,40 @@
 extends template.pug
 block content
-    h1 Stats for #{player_name}
-    p Runes found: 
-    ul
-        each rune in runes
-            li= rune.rune_name
+    script(src='https://code.jquery.com/jquery-3.6.0.js')
+    script(src='https://code.jquery.com/ui/1.13.0/jquery-ui.js')
+    
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css')
+    script.
+        $( function() {
+            $( "#tabs" ).tabs({"classes":{
+                            "ui-tabs": "d2tabs",
+                            "ui-tabs-nav": "d2tabs",
+                            "ui-tabs-tab": "d2tabs",
+                            "ui-tabs-panel": "d2tabs"
+                        }});
+        });
+    h1 Rune stats
+    div#tabs
+        ul 
+            li
+                a(href="#tabs-1") All runes
+            li
+                a(href="#tabs-2") Charts
+            li
+                a(href="#tabs-3") Player stats
+        div#tabs-1
+            table()#all_runes_table
+                each rune_finding in all_runes
+                    tr
+                        td
+                            img(src='/runes/'+ rune_finding.rune_name +'.png', width=32, height=32)
+                        td
+                            p #{rune_finding.rune_name}  
+                        td
+                            p #{rune_finding.player_name}
+                        td
+                            p #{rune_finding.finding_date}
+        div#tabs-2
+            p Coming soon!
+        div#tabs-3
+            p Coming soon!

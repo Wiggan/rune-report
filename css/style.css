@@ -21,6 +21,7 @@ h1 {
 #center {
   float: left;
   width: 50%;
+
 }
 #right {
   float: left;
@@ -36,6 +37,37 @@ table.holy_grail_table th, tr, p {
   margin: 0px;
 }
 
+table.all_runes_table th, tr, p {
+  padding: 2px;
+  margin: 0px;
+}
+
+
 .all_passed p {
   color: goldenrod;
+}
+
+ul.d2tabs, div.d2tabs{
+  background-color: black !important;
+  border: 0px solid crimson !important;
+  color: crimson;
+}
+
+li.d2tabs:not(.ui-tabs-active) {
+  background-color: black !important;
+  color: crimson;
+  border: 1px solid #333 !important;
+}
+
+a.ui-tabs-active,a.ui-state-active, li.ui-state-active, li.ui-tabs-active {
+  background-color: #511 !important;
+  color: crimson !important;
+  text-decoration-color: crimson !important;
+  border: 0px solid yellow !important;
+}
+
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+  background-color: #000 !important;
+  color: crimson !important;
+  border: 1px solid crimson !important;
 }
