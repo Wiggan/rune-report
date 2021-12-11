@@ -34,17 +34,22 @@ block content
             li
                 a(href="#tabs-3") Player stats
         div#tabs-1
-            table()#all_runes_table
-                each rune_finding in all_runes
-                    tr
-                        td
-                            img(src='/'+ rune_finding.rune_name.toLowerCase() +'.png', width=32, height=32)
-                        td
-                            p #{rune_finding.rune_name}  
-                        td
-                            p #{rune_finding.player_name}
-                        td
-                            p #{rune_finding.finding_date}
+            table
+                tr
+                    td
+                        table()#all_runes_table
+                            each rune_finding in all_runes
+                                tr
+                                    td
+                                        img(src='/'+ rune_finding.rune_name.toLowerCase() +'.png', width=32, height=32)
+                                    td
+                                        p #{rune_finding.rune_name}  
+                                    td
+                                        p #{rune_finding.player_name}
+                                    td
+                                        p #{rune_finding.finding_date}
+                    td
+                        div#runometer
         div#tabs-2
             p Coming soon!
         div#tabs-3

@@ -2,18 +2,23 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 
-/* GET findings. */
+get_stats_data = function () {
+    const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date' FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id ORDER BY date(finding_date) DESC`).all([]);
+    return { all_runes: all_runes };
+}
+
 router.get('/', function (req, res, next) {
     try {
-        const data = db.instance.prepare(`SELECT player_name, rune_name, date(finding_date) FROM finding JOIN player ON finding.player_id = player.player_id JOIN rune ON finding.rune_id = rune.rune_id`).all([]);
-        res.json(data);
+        res.render('stats',
+            get_stats_data()
+        );
     } catch (err) {
-        console.error(`Error while getting runes `, err.message);
+        console.error(`Error while getting runes`, err.message);
         next(err);
     }
 });
 
-/* INSERT finding. */
+
 router.post('/', function (req, res, next) {
     try {
         console.log(req.fields);
@@ -23,8 +28,7 @@ router.post('/', function (req, res, next) {
         console.log("Inserting new rune for player_id:" + JSON.stringify(player_id) + ", rune_id:" + JSON.stringify(rune_id));
         const result = db.instance.prepare(`INSERT INTO finding (player_id, rune_id) VALUES (?, ?)`).run(player_id.player_id, rune_id.rune_id);
         if (result.changes) {
-            const data = db.instance.prepare(`SELECT rune_name, date(finding_date) FROM finding JOIN player ON finding.player_id = player.player_id JOIN rune ON finding.rune_id = rune.rune_id WHERE finding.player_id = ?`).all([player_id.player_id]);
-            res.render('stats', { player_name: player_name, runes: data });
+            res.render('stats', get_stats_data());
         } else {
             res.json('Error in creating quote');
         }

@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 const port = 3000 || process.env.PORT;
 const db = require('./services/db');
-const runesRouter = require('./routes/runes');
-const statsRouter = require('./routes/stats');
 const findingsRouter = require('./routes/findings');
 const holyGrailRouter = require('./routes/holy_grail_findings');
 const formidableMiddleware = require('express-formidable');
@@ -23,10 +21,9 @@ app.use(express.static('images'));
 app.use(express.static('fonts'));
 app.use(express.json());
 app.set('view engine', 'pug');
-app.use('/runes', runesRouter);
-app.use('/stats', statsRouter);
-app.use('/holy_grail_stats', holyGrailRouter);
+app.use('/stats', findingsRouter);
 app.use('/findings', findingsRouter);
+app.use('/holy_grail_stats', holyGrailRouter);
 app.use('/holy_grail_findings', holyGrailRouter);
 
 app.listen(port, () => {
