@@ -38,7 +38,7 @@ block content
                 each rune_finding in all_runes
                     tr
                         td
-                            img(src='/'+ rune_finding.rune_name +'.png', width=32, height=32)
+                            img(src='/'+ rune_finding.rune_name.toLowerCase() +'.png', width=32, height=32)
                         td
                             p #{rune_finding.rune_name}  
                         td
