@@ -6,6 +6,8 @@ html
     script(src='https://cdn.plot.ly/plotly-2.6.3.min.js')
   body
 
+
+
     div#left 
       img(src='/fire.gif') 
 
@@ -17,3 +19,9 @@ html
 
     div#right 
       img(src='/fire.gif') 
+
+    div(style='clear:both;display:block')
+
+    div#footer
+      div#scroll-container
+        div#scroll-text LAST RUNE: #{latest_rune.rune_name} found by #{latest_rune.player_name}

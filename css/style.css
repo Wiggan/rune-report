@@ -71,3 +71,55 @@ a.ui-tabs-active,a.ui-state-active, li.ui-state-active, li.ui-tabs-active {
   color: crimson !important;
   border: 1px solid crimson !important;
 }
+
+#scroll-container {
+  border: 1px solid black;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#scroll-text {
+  /* animation properties */
+  -moz-transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+  
+  -moz-animation: my-animation 30s linear infinite;
+  -webkit-animation: my-animation 30s linear infinite;
+  animation: my-animation 30s linear infinite;
+}
+
+/* for Firefox */
+@-moz-keyframes my-animation {
+  from { -moz-transform: translateX(65%); }
+  to { -moz-transform: translateX(-65%); }
+}
+
+/* for Chrome */
+@-webkit-keyframes my-animation {
+  from { -webkit-transform: translateX(65%); }
+  to { -webkit-transform: translateX(-65%); }
+}
+
+@keyframes my-animation {
+  from {
+    -moz-transform: translateX(65%);
+    -webkit-transform: translateX(65%);
+    transform: translateX(65%);
+  }
+  to {
+    -moz-transform: translateX(-65%);
+    -webkit-transform: translateX(-65%);
+    transform: translateX(-65%);
+  }
+}
+
+#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color:black;
+  color: white;
+  text-align: center;
+}
