@@ -11,7 +11,7 @@ const formidableMiddleware = require('express-formidable');
 app.use(function (req, res, next) {
   const latest_rune = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date'
   FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
-  ORDER BY date(finding_date) DESC LIMIT 1`).all([]);
+  ORDER BY datetime(finding_date) DESC LIMIT 1`).all([]);
 
   res.locals.latest_rune = latest_rune[0];
   next();
