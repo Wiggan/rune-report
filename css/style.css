@@ -44,7 +44,7 @@ table.all_runes_table th, tr, p {
 
 
 .all_passed p {
-  color: goldenrod;
+  color: sienna;
 }
 
 ul.d2tabs, div.d2tabs{
@@ -122,4 +122,8 @@ a.ui-tabs-active,a.ui-state-active, li.ui-state-active, li.ui-tabs-active {
   background-color:black;
   color: white;
   text-align: center;
+}
+
+.runometer_finding {
+  color: sienna;
 }

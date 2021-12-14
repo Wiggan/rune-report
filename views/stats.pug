@@ -88,7 +88,7 @@ block content
                     td
                         table()#all_runes_table
                             each rune_finding in all_runes
-                                tr
+                                tr(class=(rune_finding.runometer_finding ? 'runometer_finding' : ''))
                                     td
                                         img(src='/'+ rune_finding.rune_name.toLowerCase() +'.png', width=32, height=32)
                                     td
