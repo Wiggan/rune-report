@@ -1,5 +1,7 @@
 extends template.pug
+
 block content
+
     script(src='https://code.jquery.com/jquery-3.6.0.js')
     script(src='https://code.jquery.com/ui/1.13.0/jquery-ui.js')
     link(rel='icon' type='image/x-icon' href='/ber.png')
@@ -56,10 +58,7 @@ block content
                 {'range': [9, 9.5], 'color': '#C41'},
                 {'range': [9.5, 10], 'color': '#D41'},
                 ],
-
                 'bar': {'color': "green"},
-                
-            
                 }
         }
         ];
@@ -72,7 +71,45 @@ block content
         };
 
         Plotly.newPlot('runometer', data, layout);
+
         });
+
+        runes_per_season = !{JSON.stringify(runes_per_season)};
+
+        traces = [];
+
+        for (const [key, value] of Object.entries(runes_per_season)) {
+            trace = {x:[],
+                     y:[],
+                    type: 'scatter',
+                    name: 'season ' + key
+            }
+            var current_sum = 0;
+            value.forEach(function(element) {
+                current_sum += element.rune_value;
+                trace.y.push(current_sum);
+                trace.x.push(element.time_delta)
+            });
+            traces.push(trace);
+        }
+
+        var lineplot_layout = {
+
+            title: 'Cumulative rune value per season',
+            xaxis: {
+                title: 'Time in days',
+            },
+            yaxis: {
+                title: 'Total rune found rune value',
+            },
+            paper_bgcolor:'rgba(0,0,0,0)',
+            plot_bgcolor:'rgba(0,0,0,0)'
+        };
+
+        $( function() {
+            Plotly.newPlot('season_plot', traces, lineplot_layout);
+        });
+        
     h1 Rune stats
     div#tabs
         ul 
@@ -100,6 +137,6 @@ block content
                     td(valign='top')
                         div#runometer
         div#tabs-2
-            p Coming soon!
+            div#season_plot
         div#tabs-3
             p Coming soon!
