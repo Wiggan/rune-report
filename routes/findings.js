@@ -28,12 +28,18 @@ get_stats_data = function () {
         runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
     })
 
-    const runometer_value = db.instance.prepare(`
+    const runometer_query = db.instance.prepare(`
     SELECT sum(rune_value) as 'runometer_value'
     FROM finding
     JOIN rune ON rune.rune_id = finding.rune_id
     WHERE finding.finding_date >= datetime('now', '-72 Hour');
-    `).all([]).map(x => x.runometer_value);
+    `).all([]);
+
+
+    var runometer_value = 0;
+    if (runometer_query.runometer_value != null) {
+        runometer_value = runometer_query.runometer_value;
+    }
 
     return {
         'all_runes': all_runes,
