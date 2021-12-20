@@ -37,8 +37,9 @@ get_stats_data = function () {
 
 
     var runometer_value = 0;
-    if (runometer_query.runometer_value != null) {
-        runometer_value = runometer_query.runometer_value;
+    console.log(runometer_query);
+    if (runometer_query[0].runometer_value != undefined) {
+        runometer_value = runometer_query[0].runometer_value;
     }
 
     return {
