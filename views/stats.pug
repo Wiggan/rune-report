@@ -93,6 +93,16 @@ block content
             traces.push(trace);
         }
 
+        const runes_per_day = !{current_season_rune_value}/!{days_into_season};
+
+        const extrapolation = {
+            x:[!{days_into_season}, 90],
+            y:[!{current_season_rune_value}, runes_per_day*(90-!{days_into_season})+!{current_season_rune_value}],
+            name: 'rune precipitation prognosis',
+            opacity: 0.25,
+        }
+        traces.push(extrapolation);
+
         var lineplot_layout = {
 
             title: 'Cumulative rune value per season',

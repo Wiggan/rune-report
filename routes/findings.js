@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 
+const current_season = 4;
 
 get_runes_for_season = function (season_id, season_start_date) {
 
@@ -15,6 +16,10 @@ get_runes_for_season = function (season_id, season_start_date) {
 
 get_stats_data = function () {
 
+    const days_into_season = db.instance.prepare(`SELECT julianday(datetime('now')) - julianday(start_date) as 'days_passed' FROM season WHERE season.season_id = ?`)
+        .all([current_season])
+        .map(x => x.days_passed)
+
     const seasons = db.instance.prepare('SELECT season_id, start_date FROM season').all([])
 
     const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date',
@@ -27,6 +32,10 @@ get_stats_data = function () {
     seasons.forEach(function (element) {
         runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
     })
+
+    const current_season_rune_value = runes_per_season[current_season]
+        .map(x => x.rune_value)
+        .reduce(function (x, y) { return x + y; });
 
     const runometer_query = db.instance.prepare(`
     SELECT sum(rune_value) as 'runometer_value'
@@ -45,7 +54,9 @@ get_stats_data = function () {
     return {
         'all_runes': all_runes,
         'runometer_value': runometer_value,
-        'runes_per_season': runes_per_season
+        'runes_per_season': runes_per_season,
+        'days_into_season': days_into_season,
+        'current_season_rune_value': current_season_rune_value
     };
 }
 
@@ -68,7 +79,7 @@ router.post('/', function (req, res, next) {
         const player_id = db.instance.prepare(`SELECT player_id FROM player WHERE lower(player_name) = lower(?) AND lower(player_password) = lower(?)`).get([player_name, player_password]);
         const rune_id = db.instance.prepare(`SELECT rune_id FROM rune WHERE rune_name = ?`).get(rune_name);
         console.log("Inserting new rune for player_id:" + JSON.stringify(player_id) + ", rune_id:" + JSON.stringify(rune_id));
-        const result = db.instance.prepare(`INSERT INTO finding (player_id, rune_id, season) VALUES (?, ?, 4)`).run(player_id.player_id, rune_id.rune_id);
+        const result = db.instance.prepare(`INSERT INTO finding (player_id, rune_id, season) VALUES (?, ?, ?)`).run(player_id.player_id, rune_id.rune_id, current_season);
         if (result.changes) {
             res.render('stats', get_stats_data());
         } else {
