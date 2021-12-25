@@ -1,7 +1,6 @@
 extends template.pug
 
 block content
-
     script(src='https://code.jquery.com/jquery-3.6.0.js')
     script(src='https://code.jquery.com/ui/1.13.0/jquery-ui.js')
     link(rel='icon' type='image/x-icon' href='/ber.png')
@@ -27,11 +26,15 @@ block content
         }});
         });
         $( function() {
+
+        
+        var title = "Runometer: <br> HRs last 72 hours";
+
         var data = [
         {
             domain: { x: [0, 1], y: [0, 1] },
             value: #{runometer_value},
-            title: { text: "Runometer: <br> HRs last 72 hours" },
+            title: { text: title },
             type: "indicator",
             mode: "gauge+number",
             delta: { reference: 1 },
@@ -69,7 +72,7 @@ block content
             paper_bgcolor:'rgba(0,0,0,0)',
             plot_bgcolor:'rgba(0,0,0,0)'
         };
-
+        
         Plotly.newPlot('runometer', data, layout);
 
         });
@@ -145,7 +148,10 @@ block content
                                     td
                                         p #{rune_finding.finding_date}
                     td(valign='top')
+                        h3(style="text-align: center")!= (runometer_value == runometer_high_score ? 'Highscore!!' : '')
                         div#runometer
+                        
+                            
         div#tabs-2
             div#season_plot
         div#tabs-3

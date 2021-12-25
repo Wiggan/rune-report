@@ -6,7 +6,8 @@ const current_season = 4;
 
 get_runes_for_season = function (season_id, season_start_date) {
 
-    const runes = db.instance.prepare(`SELECT rune.rune_value as 'rune_value', julianday(finding_date) - julianday(?) as 'time_delta'
+    const runes = db.instance.prepare(`SELECT rune.rune_value as 'rune_value', julianday(finding_date) - julianday(?) as 'time_delta',
+    julianday(finding_date) as 'finding_date_julianday'
     FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
     WHERE season = ?
     ORDER BY datetime(finding_date) ASC`).all([season_start_date, season_id]);
@@ -14,29 +15,7 @@ get_runes_for_season = function (season_id, season_start_date) {
     return runes;
 }
 
-get_stats_data = function () {
-
-    const days_into_season = db.instance.prepare(`SELECT julianday(datetime('now')) - julianday(start_date) as 'days_passed' FROM season WHERE season.season_id = ?`)
-        .all([current_season])
-        .map(x => x.days_passed)
-
-    const seasons = db.instance.prepare('SELECT season_id, start_date FROM season').all([])
-
-    const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date',
-    finding.finding_date >= datetime('now', '-72 Hour') as 'runometer_finding'
-    FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
-    WHERE season = 4
-    ORDER BY datetime(finding_date) DESC`).all([]);
-
-    runes_per_season = {}
-    seasons.forEach(function (element) {
-        runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
-    })
-
-    const current_season_rune_value = runes_per_season[current_season]
-        .map(x => x.rune_value)
-        .reduce(function (x, y) { return x + y; });
-
+get_runometer_value = function () {
     const runometer_query = db.instance.prepare(`
     SELECT sum(rune_value) as 'runometer_value'
     FROM finding
@@ -51,9 +30,63 @@ get_stats_data = function () {
         runometer_value = runometer_query[0].runometer_value;
     }
 
+    return runometer_value;
+}
+
+get_all_runes = function () {
+    const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date',
+    finding.finding_date >= datetime('now', '-72 Hour') as 'runometer_finding'
+    FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
+    WHERE season = 4
+    ORDER BY datetime(finding_date) DESC`).all([]);
+
+    return all_runes;
+}
+
+get_runometer_high_score = function () {
+
+    high_score = 0;
+
+    runes_per_season[current_season].forEach(function (element, index) {
+        current_value = 0;
+        for (let i = index; i >= 0; i--) {
+            const time_diff = (runes_per_season[current_season][index].finding_date_julianday -
+                runes_per_season[current_season][i].finding_date_julianday)
+            if (time_diff <= 3.0) {
+                current_value += runes_per_season[current_season][i].rune_value;
+            } else {
+                high_score = Math.max(current_value, high_score);
+                break;
+            }
+        }
+        high_score = Math.max(current_value, high_score);
+    })
+
+    return high_score;
+}
+
+get_stats_data = function () {
+
+    const days_into_season = db.instance.prepare(`SELECT julianday(datetime('now')) - julianday(start_date) as 'days_passed' FROM season WHERE season.season_id = ?`)
+        .all([current_season])
+        .map(x => x.days_passed)
+
+    const seasons = db.instance.prepare('SELECT season_id, start_date FROM season').all([])
+
+    runes_per_season = {}
+    seasons.forEach(function (element) {
+        runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
+    })
+
+    const current_season_rune_value = runes_per_season[current_season]
+        .map(x => x.rune_value)
+        .reduce(function (x, y) { return x + y; });
+
+
     return {
-        'all_runes': all_runes,
-        'runometer_value': runometer_value,
+        'all_runes': get_all_runes(),
+        'runometer_value': get_runometer_value(),
+        'runometer_high_score': get_runometer_high_score(),
         'runes_per_season': runes_per_season,
         'days_into_season': days_into_season,
         'current_season_rune_value': current_season_rune_value
