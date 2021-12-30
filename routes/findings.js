@@ -62,7 +62,7 @@ get_runometer_high_score = function () {
         high_score = Math.max(current_value, high_score);
     })
 
-    return high_score;
+    return high_score.toFixed(2);
 }
 
 get_stats_data = function () {
@@ -80,7 +80,7 @@ get_stats_data = function () {
 
     const current_season_rune_value = runes_per_season[current_season]
         .map(x => x.rune_value)
-        .reduce(function (x, y) { return x + y; });
+        .reduce(function (x, y) { return x + y; }).toFixed(2);
 
 
     return {
