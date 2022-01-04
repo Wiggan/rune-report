@@ -13,7 +13,12 @@ app.use(function (req, res, next) {
   FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
   ORDER BY datetime(finding_date) DESC LIMIT 1`).all([]);
 
+  const latest_grail = db.instance.prepare(`SELECT player_name, item_name, finding_date as 'finding_date'
+  FROM holy_grail_item_finding JOIN holy_grail_item ON holy_grail_item.holy_grail_item_id = holy_grail_item_finding.holy_grail_item_id JOIN player ON player.player_id = holy_grail_item_finding.player_id
+  ORDER BY datetime(finding_date) DESC LIMIT 1`).all([]);
+
   res.locals.latest_rune = latest_rune[0];
+  res.locals.latest_grail = latest_grail[0];
   next();
 });
 

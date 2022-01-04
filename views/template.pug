@@ -6,8 +6,6 @@ html
     script(src='https://cdn.plot.ly/plotly-2.6.3.min.js')
   body
 
-
-
     div#left 
       img(src='/fire.gif') 
 
@@ -24,4 +22,10 @@ html
 
     div#footer
       div#scroll-container
-        div#scroll-text LAST RUNE: #{latest_rune.rune_name} found by #{latest_rune.player_name}
+        div#scroll-text
+          span LAST RUNE: 
+          span(style='color:#f5972c') #{latest_rune.rune_name} 
+          span found by #{latest_rune.player_name} 
+          span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LAST HOLY GRAIL: 
+          span(style='color:#f5972c') #{latest_grail.item_name} 
+          span found by #{latest_grail.player_name} 
