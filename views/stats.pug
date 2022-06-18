@@ -88,6 +88,8 @@ block content
                     name: 'season ' + key
             }
             var current_sum = 0;
+            trace.y.push(0);
+            trace.x.push(0);
             value.forEach(function(element) {
                 current_sum += element.rune_value;
                 trace.y.push(current_sum);
