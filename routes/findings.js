@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 
-const current_season = 4;
+const current_season = 5;
 
 get_runes_for_season = function (season_id, season_start_date) {
 
@@ -69,7 +69,7 @@ get_stats_data = function () {
 
     const days_into_season = db.instance.prepare(`SELECT julianday(datetime('now')) - julianday(start_date) as 'days_passed' FROM season WHERE season.season_id = ?`)
         .all([current_season])
-        .map(x => x.days_passed)
+        .map(x => Math.max(1, x.days_passed))
 
     const seasons = db.instance.prepare('SELECT season_id, start_date FROM season').all([])
 
@@ -78,9 +78,13 @@ get_stats_data = function () {
         runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
     })
 
-    const current_season_rune_value = runes_per_season[current_season]
-        .map(x => x.rune_value)
-        .reduce(function (x, y) { return x + y; }).toFixed(2);
+    let current_season_rune_value = 0;
+
+    if (runes_per_season[current_season].length > 0) {
+        current_season_rune_value = runes_per_season[current_season]
+            .map(x => x.rune_value)
+            .reduce(function (x, y) { return x + y; }).toFixed(2);
+    }
 
 
     return {
