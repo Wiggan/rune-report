@@ -37,7 +37,7 @@ get_all_runes = function () {
     const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date',
     finding.finding_date >= datetime('now', '-72 Hour') as 'runometer_finding'
     FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
-    WHERE season = 4
+    WHERE season = 5
     ORDER BY datetime(finding_date) DESC`).all([]);
 
     return all_runes;
