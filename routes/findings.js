@@ -7,13 +7,26 @@ const current_season = 6;
 get_runes_for_season = function (season_id, season_start_date) {
 
     const runes = db.instance.prepare(`SELECT rune.rune_value as 'rune_value', julianday(finding_date) - julianday(?) as 'time_delta',
-    julianday(finding_date) as 'finding_date_julianday'
+    julianday(finding_date) as 'finding_date_julianday',
+    rune.rune_name as 'rune_name'
     FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
     WHERE season = ?
     ORDER BY datetime(finding_date) ASC`).all([season_start_date, season_id]);
 
     return runes;
 }
+
+get_frequency_table_column = function (season_id) {
+
+    const runes = db.instance.prepare(`SELECT rune.rune_name as 'rune_name', COUNT(rune.rune_name) as 'rune_count', rune.rune_value as 'rune_value'
+    FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
+    WHERE season = ?
+    GROUP BY rune_name
+    ORDER BY rune_value DESC`).all([season_id]);
+
+    return runes;
+}
+
 
 get_runometer_value = function () {
     const runometer_query = db.instance.prepare(`
@@ -33,12 +46,13 @@ get_runometer_value = function () {
     return runometer_value;
 }
 
+
 get_all_runes = function () {
     const all_runes = db.instance.prepare(`SELECT player_name, rune_name, finding_date as 'finding_date',
     finding.finding_date >= datetime('now', '-72 Hour') as 'runometer_finding'
     FROM finding JOIN rune ON rune.rune_id = finding.rune_id JOIN player ON player.player_id = finding.player_id
-    WHERE season = 6
-    ORDER BY datetime(finding_date) DESC`).all([]);
+    WHERE season = ?
+    ORDER BY datetime(finding_date) DESC`).all([current_season]);
 
     return all_runes;
 }
@@ -74,9 +88,11 @@ get_stats_data = function () {
     const seasons = db.instance.prepare('SELECT season_id, start_date FROM season').all([])
 
     runes_per_season = {}
+    runes_table = []
     seasons.forEach(function (element) {
         runes_per_season[element.season_id] = get_runes_for_season(element.season_id, element.start_date);
     })
+
 
     let current_season_rune_value = 0;
 
@@ -89,6 +105,7 @@ get_stats_data = function () {
 
     return {
         'all_runes': get_all_runes(),
+        'runes_table': get_frequency_table_column(current_season),
         'runometer_value': get_runometer_value(),
         'runometer_high_score': get_runometer_high_score(),
         'runes_per_season': runes_per_season,

@@ -157,4 +157,14 @@ block content
         div#tabs-2
             div#season_plot
         div#tabs-3
-            p Coming soon!
+            h4 Runes found this season:
+            
+            table
+                each t in runes_table
+                    tr(class=('runometer_finding'))
+                        td
+                            img(src='/'+ t.rune_name.toLowerCase() +'.png', width=32, height=32)
+                        td
+                            p #{t.rune_name}
+                        td 
+                            p #{t.rune_count}
