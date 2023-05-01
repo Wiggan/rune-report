@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 
-const current_season = 6;
+const current_season = 7;
 
 get_runes_for_season = function (season_id, season_start_date) {
 
